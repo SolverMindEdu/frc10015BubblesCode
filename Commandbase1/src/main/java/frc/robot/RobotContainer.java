@@ -38,6 +38,7 @@ public class RobotContainer {
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final SwerveRequest.FieldCentricFacingAngle angle = new SwerveRequest.FieldCentricFacingAngle();
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -55,6 +56,10 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+
+    angle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+    angle.HeadingController.setPID(8,0,0);
+    joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() -> angle.withTargetDirection(new Rotation2d(drivetrain.whichDirection()))));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
