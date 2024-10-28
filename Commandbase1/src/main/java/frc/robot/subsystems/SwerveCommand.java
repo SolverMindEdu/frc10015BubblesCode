@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -51,6 +52,7 @@ public class SwerveCommand extends SwerveDrivetrain implements Subsystem {
     public boolean doRejectUpdate = false;
     private final Field2d m_field = new Field2d();
 
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -84,6 +86,19 @@ public class SwerveCommand extends SwerveDrivetrain implements Subsystem {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
+    public double whichDirection(){
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()){
+            if (alliance.get() == DriverStation.Alliance.Blue){
+                return Units.degreesToRadians(0);
+            } else{
+                return Units.degreesToRadians(180);
+            }
+        } else {
+            return Units.degreesToRadians(0);
+        }
+    }
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
@@ -98,7 +113,6 @@ public class SwerveCommand extends SwerveDrivetrain implements Subsystem {
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
-
     
 
     @Override
