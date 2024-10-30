@@ -86,18 +86,23 @@ public class SwerveCommand extends SwerveDrivetrain implements Subsystem {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-    public double whichDirection(){
+    public double rotateAngle(){
         var alliance = DriverStation.getAlliance();
         if (alliance.isPresent()){
             if (alliance.get() == DriverStation.Alliance.Blue){
-                return Units.degreesToRadians(0);
+                return alignmentAngle(new Pose2d(0, 5.6, Rotation2d.fromDegrees(0)), getState().Pose);
             } else{
-                return Units.degreesToRadians(180);
+                return alignmentAngle(new Pose2d(16.5, 5.6, Rotation2d.fromDegrees(180)), getState().Pose);
             }
         } else {
             return Units.degreesToRadians(0);
         }
     }
+
+    public double alignmentAngle(Pose2d target, Pose2d current) {
+        return (Math.atan2(target.getY() - current.getY(), target.getX() - current.getX()));
+      }
+    
 
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
