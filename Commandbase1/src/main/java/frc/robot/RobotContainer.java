@@ -59,7 +59,7 @@ public class RobotContainer {
 
     angle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     angle.HeadingController.setPID(8,0,0);
-    joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() -> angle.withTargetDirection(new Rotation2d(drivetrain.whichDirection()))));
+    joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() -> angle.withTargetDirection(new Rotation2d(drivetrain.rotateAngle()))));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
