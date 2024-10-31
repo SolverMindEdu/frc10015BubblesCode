@@ -44,10 +44,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.6) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.6) // Drive left with negative X (left)
-            .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterdclockwise with negative X (left)
+        drivetrain.applyRequest(() -> drive
+          .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.6) // Drive forward with
+                                                                // negative Y (forward)
+          .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.6) // Drive left with negative X (left)
+          .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterdclockwise with negative X (left)
         ));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -59,7 +60,10 @@ public class RobotContainer {
 
     angle.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
     angle.HeadingController.setPID(2,0,0);
-    joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() -> angle.withTargetDirection(new Rotation2d(drivetrain.rotateAngle()))));
+    joystick.rightTrigger().whileTrue(drivetrain.applyRequest(() -> angle.withTargetDirection(new Rotation2d(drivetrain.rotateAngle()))
+            .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.6)                                                                   
+            .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.6) 
+    ));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
